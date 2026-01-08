@@ -198,3 +198,90 @@ event_player_death (logic_eventlistener):
 - [ ] Pickups return after 60s and add Fuel
 - [ ] Capture zone scores points and adds Fuel
 - [ ] Round ends when timer hits 0
+
+AMMENDUM: 
+Added to the Technical Checklist / Plan (new section: “Rebirthed Kill-Leader Highlight”). 
+
+tf2pdthread
+
+Checklist Item: Rebirthed Kill-Leader Highlight (pickup flash + TopK)
+
+Goal: Remove the default PD “team leader” outline (via noteamleader.nut), then recreate the useful part as a Flagspawn feature:
+
+OnPickup (any flag): give carrier 3 seconds of “kill leader style” highlight (outline + your center digit glow).
+
+After 3 seconds: highlight persists only for a TopK subset per team, based on carried flag value, to spotlight a handful of very large flags.
+
+Floor / threshold: TopK highlighting only begins at 10+ points carried (configurable).
+
+Visual requirements
+
+✅ Outline on highlighted carriers (your own tf_glow-driven outline, not PD’s built-in leader system).
+
+✅ “PD kill-leader vibe”: glowing number above head (your digit prop system) for highlighted carriers.
+
+✅ Optional: star icon next to carried points (bottom-left) + PD dispenser FX
+
+Note: those are part of PD’s built-in “leader” feature set (outline/dispenser/number above head) 
+
+tf2pdthread
+
+. If we truly remove the engine’s leader behavior, we should treat star/dispenser as “nice-to-have” and not depend on them.
+
+Lightweight TopK algorithm (compute-safe, low flicker)
+
+This keeps server cost trivial and avoids highlight “thrash”.
+
+Data tracked per player (per life):
+
+tempGlowUntil (Time() + 3.0 on pickup)
+
+carriedValue (your fs_value on the carried flag)
+
+isTopK (bool)
+
+lastPickedUpTime (for tie-break / stability)
+
+Periodic recompute (every 0.5s–1.0s is plenty):
+
+For each team, build list of players with:
+
+alive, carrying a flag
+
+carriedValue >= 10
+
+Sort descending by carriedValue
+
+Take top K (you said ~3)
+
+Apply hysteresis so it doesn’t flicker:
+
+If someone is already TopK, don’t drop them unless they fall below threshold - 2 (or lose flag), OR they drop out of topK by a margin.
+
+Tie-break: keep previous TopK if equal values; otherwise tie-break by lastPickedUpTime (earlier pickup keeps it).
+
+Highlight rule:
+
+highlighted = (Time() < tempGlowUntil) OR isTopK
+
+This guarantees:
+
+Every pickup gets the 3s “spotlight”.
+
+After that, only the big carriers remain outlined.
+
+You get the “3 people with 50 points, nobody else highlighted” scenario naturally.
+
+Acceptance tests
+
+ With noteamleader.nut active, no one ever gets the engine kill-leader outline.
+
+ Pick up any flag (1-point included) → carrier gets highlight for exactly ~3s.
+
+ Set up values: 50 / 50 / 50 across three carriers, others <10 → only those 3 are highlighted after their 3s expires.
+
+ If a highlighted carrier drops below 10 or drops the flag → highlight ends quickly (next recompute).
+
+ Digits above head appear only when highlighted is true (or at least only for TopK if you want pickup flash to be outline-only).
+
+If you want, I can fold this into your existing checklist wording style (same headings/format as the current plan) and point out the exact hook points in flagspawn_v2.nut for “OnPickup” + “leader tick”.
