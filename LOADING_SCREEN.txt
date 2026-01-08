@@ -1,0 +1,39 @@
+═══════════════════════════════════════════════════════════════
+                      FLAGSPAWN (PD FUEL)
+═══════════════════════════════════════════════════════════════
+
+              RAID THE ENEMY TAP. FUEL YOUR TEAM.
+
+───────────────────────────────────────────────────────────────
+                         HOW TO PLAY
+───────────────────────────────────────────────────────────────
+
+  ► Touch the ENEMY TAP in their base to grab points
+  ► Bring points back to YOUR CAPTURE ZONE to score
+  ► Team with the most points when time runs out WINS
+
+───────────────────────────────────────────────────────────────
+                           FUEL
+───────────────────────────────────────────────────────────────
+
+  ► Capturing and returning points fills your team's FUEL
+  ► Higher Fuel = BIGGER pickups at your Spawner
+  ► Watch the glowing digits — they show Fuel levels
+
+───────────────────────────────────────────────────────────────
+                          WARNING
+───────────────────────────────────────────────────────────────
+
+  ► Taking damage while carrying makes you DROP points
+  ► Dying scatters your points for anyone to grab
+  ► Don't get greedy — deliver what you have!
+
+───────────────────────────────────────────────────────────────
+                           TIPS
+───────────────────────────────────────────────────────────────
+
+  ► Glowing pickups are the most valuable — prioritize them
+  ► Flickering glow = pickup about to return to its team
+  ► Each tap extends the round by +3 seconds
+
+═══════════════════════════════════════════════════════════════
